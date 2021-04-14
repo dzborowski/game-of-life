@@ -13,8 +13,11 @@
 void GameController::run() {
     std::cout << "Game of Life" << std::endl << std::endl;
 
-    auto gridWidth = this->getGridWidth();
-    auto gridHeight = this->getGridHeight();
+    auto gridWidth = std::move(getGridSize()[0]);
+    auto gridHeight = std::move(getGridSize()[1]);
+
+//    auto gridWidth = this->getGridWidth();
+//    auto gridHeight = this->getGridHeight();
     auto startingLivingCellsCoordinates = this->getStartingLivingCellsCoordinates();
     auto oldGrid = std::make_shared<Grid>(gridWidth, gridHeight);
     auto newGrid = std::make_unique<Grid>(gridWidth, gridHeight);
@@ -35,6 +38,12 @@ void GameController::run() {
         std::cout << std::endl;
 
         oldGrid = std::move(newGrid);
+        // std::move proof that newGrid is now point to nullptr
+        if(newGrid == nullptr)
+            std::cout<<"NewGrind -> nullptr: "<<std::endl;
+        else
+            newGrid->display();
+
         newGrid = std::make_unique<Grid>(gridWidth, gridHeight);
 
         std::chrono::milliseconds delay(1000);
@@ -42,12 +51,19 @@ void GameController::run() {
     }
 }
 
-int GameController::getGridWidth() {
-    return 10;
-}
+//int GameController::getGridWidth() {
+//    return 10;
+//}
+//
+//int GameController::getGridHeight() {
+//    return 5;
+//}
 
-int GameController::getGridHeight() {
-    return 5;
+std::vector<int> GameController::getGridSize(){
+    std::vector<int> getGridSize;
+    getGridSize.push_back(10);
+    getGridSize.push_back(5);
+    return getGridSize;
 }
 
 std::unique_ptr<std::vector<int>> GameController::getStartingLivingCellsCoordinates() {

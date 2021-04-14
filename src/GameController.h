@@ -14,9 +14,12 @@ public:
     void run();
 
 private:
-    int getGridWidth();
+//    int getGridWidth();
+//
+//    int getGridHeight();
 
-    int getGridHeight();
+    std::vector<int> getGridSize();
+
 
     std::unique_ptr<std::vector<int>> getStartingLivingCellsCoordinates();
 };
