@@ -17,24 +17,17 @@ public:
 
     void display();
 
-    int getAliveCellNeighborsCount(int cellX, int cellY);
+    [[nodiscard]] int getWidth() const;
 
-    bool isCellAlive(int cellX, int cellY);
+    [[nodiscard]] int getHeight() const;
 
-    void killCell(int cellX, int cellY);
-
-    void reviveCell(int cellX, int cellY);
-
-    void recalculateNewGridState(std::shared_ptr<Grid> oldGrid);
+    std::shared_ptr<Cell> getCell(int cellX, int cellY);
 
 private:
     int width = 0;
     int height = 0;
+
     std::unique_ptr<std::vector<std::unique_ptr<std::vector<std::shared_ptr<Cell>>>>> cells;
-
-    std::vector<std::shared_ptr<Cell>> getCellNeighbors(int cellX, int cellY);
-
-    std::shared_ptr<Cell> getCell(int cellX, int cellY);
 };
 
 

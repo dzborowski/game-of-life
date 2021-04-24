@@ -8,20 +8,42 @@
 #include <vector>
 #include <memory>
 #include "Grid.h"
+#include "neighborhood/NeighborhoodCalculator.h"
 
 class GameController {
 public:
-    void run();
+    [[noreturn]] void run();
 
 private:
-//    int getGridWidth();
-//
-//    int getGridHeight();
-
     std::vector<int> getGridSize();
 
-
     std::unique_ptr<std::vector<int>> getStartingLivingCellsCoordinates();
+
+    template<typename T>
+    void recalculateNewGridState(const T &oldGrid, const T &newGrid) {
+        auto height = newGrid->getHeight();
+        auto width = newGrid->getWidth();
+        NeighborhoodCalculator neighborhoodCalculator(oldGrid);
+
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                auto oldCell = oldGrid->getCell(j, i);
+                auto isOldCellAlive = oldCell->isAlive();
+                auto neighborhood = neighborhoodCalculator.getCellNeighborhood(j, i);
+                auto aliveOldCellNeighborsCount = neighborhoodCalculator.getAliveCellNeighborsCount(neighborhood);
+                auto newCell = newGrid->getCell(j, i);
+
+                if (!isOldCellAlive && aliveOldCellNeighborsCount == 3)
+                    newCell->setIsAlive(true);
+
+                if (isOldCellAlive && (aliveOldCellNeighborsCount == 2 || aliveOldCellNeighborsCount == 3))
+                    newCell->setIsAlive(true);
+
+                if (isOldCellAlive && (aliveOldCellNeighborsCount < 2 || aliveOldCellNeighborsCount > 3))
+                    newCell->setIsAlive(false);
+            }
+        }
+    }
 };
 
 

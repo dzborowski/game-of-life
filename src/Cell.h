@@ -8,7 +8,7 @@
 
 class Cell {
 public:
-    bool isAlive() const;
+    [[nodiscard]] bool isAlive() const;
 
     void setIsAlive(bool isAlive);
 

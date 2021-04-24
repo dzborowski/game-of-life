@@ -9,21 +9,23 @@
 #include <thread>
 #include <ctime>
 #include "GameController.h"
+#include "neighborhood/NeighborhoodCalculator.h"
 
-void GameController::run() {
+[[noreturn]] void GameController::run() {
     std::cout << "Game of Life" << std::endl << std::endl;
 
     auto gridWidth = std::move(getGridSize()[0]);
     auto gridHeight = std::move(getGridSize()[1]);
 
-//    auto gridWidth = this->getGridWidth();
-//    auto gridHeight = this->getGridHeight();
     auto startingLivingCellsCoordinates = this->getStartingLivingCellsCoordinates();
     auto oldGrid = std::make_shared<Grid>(gridWidth, gridHeight);
-    auto newGrid = std::make_unique<Grid>(gridWidth, gridHeight);
+    auto newGrid = std::make_shared<Grid>(gridWidth, gridHeight);
 
-    for (int i = 0; i < startingLivingCellsCoordinates->size(); i += 2)
-        oldGrid->reviveCell(startingLivingCellsCoordinates->at(i), startingLivingCellsCoordinates->at(i + 1));
+    for (int i = 0; i < startingLivingCellsCoordinates->size(); i += 2) {
+        auto oldCell = oldGrid->getCell(startingLivingCellsCoordinates->at(i),
+                                        startingLivingCellsCoordinates->at(i + 1));
+        oldCell->setIsAlive(true);
+    }
 
     std::cout << "Starting setup" << std::endl << std::endl;
     oldGrid->display();
@@ -33,14 +35,14 @@ void GameController::run() {
         std::time_t startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         std::cout << std::ctime(&startTime) << std::endl;
 
-        newGrid->recalculateNewGridState(oldGrid);
+        this->recalculateNewGridState(oldGrid, newGrid);
         newGrid->display();
         std::cout << std::endl;
 
         oldGrid = std::move(newGrid);
         // std::move proof that newGrid is now point to nullptr
-        if(newGrid == nullptr)
-            std::cout<<"NewGrind -> nullptr: "<<std::endl;
+        if (newGrid == nullptr)
+            std::cout << "NewGrind -> nullptr: " << std::endl;
         else
             newGrid->display();
 
@@ -51,15 +53,7 @@ void GameController::run() {
     }
 }
 
-//int GameController::getGridWidth() {
-//    return 10;
-//}
-//
-//int GameController::getGridHeight() {
-//    return 5;
-//}
-
-std::vector<int> GameController::getGridSize(){
+std::vector<int> GameController::getGridSize() {
     std::vector<int> getGridSize;
     getGridSize.push_back(10);
     getGridSize.push_back(5);
