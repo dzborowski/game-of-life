@@ -10,12 +10,17 @@
 #include <ctime>
 #include "GameController.h"
 #include "neighborhood/NeighborhoodCalculator.h"
+#include "GridSize.h"
 
 [[noreturn]] void GameController::run() {
     std::cout << "Game of Life" << std::endl << std::endl;
 
-    auto gridWidth = std::move(getGridSize()[0]);
-    auto gridHeight = std::move(getGridSize()[1]);
+
+    GridSize initial(10,5);
+    auto size = std::move(initial);
+
+    int gridWidth = size.width;
+    int gridHeight = size.height;
 
     auto startingLivingCellsCoordinates = this->getStartingLivingCellsCoordinates();
     auto oldGrid = std::make_shared<Grid>(gridWidth, gridHeight);
@@ -39,13 +44,6 @@
         newGrid->display();
         std::cout << std::endl;
 
-        oldGrid = std::move(newGrid);
-        // std::move proof that newGrid is now point to nullptr
-        if (newGrid == nullptr)
-            std::cout << "NewGrind -> nullptr: " << std::endl;
-        else
-            newGrid->display();
-
         newGrid = std::make_unique<Grid>(gridWidth, gridHeight);
 
         std::chrono::milliseconds delay(1000);
@@ -53,12 +51,6 @@
     }
 }
 
-std::vector<int> GameController::getGridSize() {
-    std::vector<int> getGridSize;
-    getGridSize.push_back(10);
-    getGridSize.push_back(5);
-    return getGridSize;
-}
 
 std::unique_ptr<std::vector<int>> GameController::getStartingLivingCellsCoordinates() {
     auto coordinates = std::make_unique<std::vector<int>>();

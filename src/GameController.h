@@ -15,7 +15,6 @@ public:
     [[noreturn]] void run();
 
 private:
-    std::vector<int> getGridSize();
 
     std::unique_ptr<std::vector<int>> getStartingLivingCellsCoordinates();
 
