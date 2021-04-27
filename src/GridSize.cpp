@@ -10,14 +10,8 @@ GridSize::GridSize(int width, int height): width(width), height(height){
 }
 GridSize::GridSize(GridSize &&other) noexcept {
     std::cout<<"Before move constructor address: width - "<<&other.width<<" height - "<<&other.height<<std::endl;
-//    this->width = std::move(other.width);
-//    this->height = std::move(other.height);
-
-    width = other.width;
-    height = other.height;
-
-    other.width=0;
-    other.height=0;
+    this->width = std::move(other.width);
+    this->height = std::move(other.height);
 
     std::cout<<"After move constructor address: width - "<<&other.width<<" height - "<<&other.height<<std::endl;
 
