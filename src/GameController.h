@@ -26,11 +26,11 @@ private:
 
         for (int i = 0; i < height; ++i) {
             for (int j = 0; j < width; ++j) {
-                auto oldCell = oldGrid->getCell(j, i);
+                auto oldCell = oldGrid->getElement(j, i);
                 auto isOldCellAlive = oldCell->isAlive();
-                auto neighborhood = neighborhoodCalculator.getCellNeighborhood(j, i);
-                auto aliveOldCellNeighborsCount = neighborhoodCalculator.getAliveCellNeighborsCount(neighborhood);
-                auto newCell = newGrid->getCell(j, i);
+                auto neighborhood = neighborhoodCalculator.getNeighborhood(j, i);
+                auto aliveOldCellNeighborsCount = this->getAliveCellNeighborsCount(neighborhood);
+                auto newCell = newGrid->getElement(j, i);
 
                 if (!isOldCellAlive && aliveOldCellNeighborsCount == 3)
                     newCell->setIsAlive(true);
@@ -42,6 +42,16 @@ private:
                     newCell->setIsAlive(false);
             }
         }
+    }
+
+    template<typename T>
+    auto getAliveCellNeighborsCount(T neighborhood) {
+        int count = 0;
+        for (auto &cell : neighborhood.getNeighbors()) {
+            if (cell->isAlive())
+                count++;
+        }
+        return count;
     }
 };
 

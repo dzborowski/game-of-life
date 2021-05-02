@@ -3,5 +3,3 @@
 //
 
 #include "EdgeNeighborhood.h"
-
-EdgeNeighborhood::EdgeNeighborhood(const std::vector<std::shared_ptr<Cell>> &neighbors) : Neighborhood(neighbors) {}

@@ -9,7 +9,6 @@
 #include <thread>
 #include <ctime>
 #include "GameController.h"
-#include "neighborhood/NeighborhoodCalculator.h"
 #include "GridSize.h"
 
 [[noreturn]] void GameController::run() {
@@ -23,12 +22,12 @@
     int gridHeight = size.height;
 
     auto startingLivingCellsCoordinates = this->getStartingLivingCellsCoordinates();
-    auto oldGrid = std::make_shared<Grid>(gridWidth, gridHeight);
-    auto newGrid = std::make_shared<Grid>(gridWidth, gridHeight);
+    auto oldGrid = std::make_shared<Grid<Cell>>(gridWidth, gridHeight);
+    auto newGrid = std::make_shared<Grid<Cell>>(gridWidth, gridHeight);
 
     for (int i = 0; i < startingLivingCellsCoordinates->size(); i += 2) {
-        auto oldCell = oldGrid->getCell(startingLivingCellsCoordinates->at(i),
-                                        startingLivingCellsCoordinates->at(i + 1));
+        auto oldCell = oldGrid->getElement(startingLivingCellsCoordinates->at(i),
+                                           startingLivingCellsCoordinates->at(i + 1));
         oldCell->setIsAlive(true);
     }
 
@@ -44,7 +43,8 @@
         newGrid->display();
         std::cout << std::endl;
 
-        newGrid = std::make_unique<Grid>(gridWidth, gridHeight);
+        oldGrid = std::move(newGrid);
+        newGrid = std::make_unique<Grid<Cell>>(gridWidth, gridHeight);
 
         std::chrono::milliseconds delay(1000);
         std::this_thread::sleep_for(delay);

@@ -3,5 +3,3 @@
 //
 
 #include "MooreNeighborhood.h"
-
-MooreNeighborhood::MooreNeighborhood(const std::vector<std::shared_ptr<Cell>> &neighbors) : Neighborhood(neighbors) {}
