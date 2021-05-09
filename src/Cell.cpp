@@ -13,7 +13,7 @@ void Cell::setIsAlive(bool isAlive) {
     Cell::_isAlive = isAlive;
 }
 
-void Cell::display() {
+void Cell::display() const {
     auto message = this->isAlive() ? "O" : "X";
     std::cout << message;
 }

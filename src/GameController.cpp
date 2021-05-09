@@ -14,8 +14,11 @@
 [[noreturn]] void GameController::run() {
     std::cout << "Game of Life" << std::endl << std::endl;
 
+    constexpr int STEP_DELAY_MS = 1000;
+    constexpr int INIT_GRID_WIDTH = 10;
+    constexpr int INIT_GRID_HEIGHT = 5;
 
-    GridSize initial(10,5);
+    GridSize initial(INIT_GRID_WIDTH, INIT_GRID_HEIGHT);
     auto size = std::move(initial);
 
     int gridWidth = size.width;
@@ -46,7 +49,7 @@
         oldGrid = std::move(newGrid);
         newGrid = std::make_unique<Grid<Cell>>(gridWidth, gridHeight);
 
-        std::chrono::milliseconds delay(1000);
+        std::chrono::milliseconds delay(STEP_DELAY_MS);
         std::this_thread::sleep_for(delay);
     }
 }

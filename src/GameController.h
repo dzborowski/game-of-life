@@ -45,9 +45,9 @@ private:
     }
 
     template<typename T>
-    auto getAliveCellNeighborsCount(T neighborhood) {
+    auto getAliveCellNeighborsCount(T neighborhood) const {
         int count = 0;
-        for (auto &cell : neighborhood.getNeighbors()) {
+        for (const auto &cell : neighborhood.getNeighbors()) {
             if (cell->isAlive())
                 count++;
         }

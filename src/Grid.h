@@ -16,13 +16,13 @@ class Grid {
 public:
     Grid(int width, int height);
 
-    void display();
+    void display() const;
 
     [[nodiscard]] int getWidth() const;
 
     [[nodiscard]] int getHeight() const;
 
-    std::shared_ptr<T> getElement(int x, int y);
+    std::shared_ptr<T> getElement(int x, int y) const;
 
 private:
     int width = 0;
@@ -54,14 +54,14 @@ int Grid<T>::getHeight() const {
 }
 
 template<typename T>
-std::shared_ptr<T> Grid<T>::getElement(int x, int y) {
+std::shared_ptr<T> Grid<T>::getElement(int x, int y) const {
     return this->elements->at(y)->at(x);
 }
 
 template<typename T>
-void Grid<T>::display() {
-    for (auto &row : *this->elements) {
-        for (auto &element :*row) {
+void Grid<T>::display() const {
+    for (const auto &row : *this->elements) {
+        for (const auto &element :*row) {
             element->display();
             std::cout << " ";
         }

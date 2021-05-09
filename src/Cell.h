@@ -12,7 +12,7 @@ public:
 
     void setIsAlive(bool isAlive);
 
-    void display();
+    void display() const;
 
 private:
     bool _isAlive = false;
