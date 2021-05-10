@@ -18,9 +18,9 @@ public:
 
     void display() const;
 
-    [[nodiscard]] int getWidth() const;
+    [[nodiscard]] constexpr int getWidth() const;
 
-    [[nodiscard]] int getHeight() const;
+    [[nodiscard]] constexpr int getHeight() const;
 
     std::shared_ptr<T> getElement(int x, int y) const;
 
@@ -44,12 +44,12 @@ Grid<T>::Grid(int width, int height) : width(width), height(height) {
 }
 
 template<typename T>
-int Grid<T>::getWidth() const {
+constexpr int Grid<T>::getWidth() const {
     return width;
 }
 
 template<typename T>
-int Grid<T>::getHeight() const {
+constexpr int Grid<T>::getHeight() const {
     return height;
 }
 

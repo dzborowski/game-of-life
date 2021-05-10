@@ -10,12 +10,13 @@ class Cell {
 public:
     [[nodiscard]] bool isAlive() const;
 
-    void setIsAlive(bool isAlive);
+    void setIsAlive(bool Alive) const;
 
     void display() const;
 
 private:
-    bool _isAlive = false;
+    mutable bool _isAlive = false;
+
 };
 
 
