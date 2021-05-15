@@ -8,11 +8,9 @@
 
 #include "Neighborhood.h"
 
-template<typename T>
-class EdgeNeighborhood : public Neighborhood<T> {
+class EdgeNeighborhood : public Neighborhood {
 public:
-    explicit EdgeNeighborhood(const std::vector<std::shared_ptr<T>> &neighbors) : Neighborhood<T>(
-            neighbors) {}
+    explicit EdgeNeighborhood(const std::vector<std::shared_ptr<Cell>> &neighbors);
 };
 
 

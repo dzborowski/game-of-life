@@ -9,45 +9,32 @@
 #include <thread>
 #include <ctime>
 #include "GameController.h"
-#include "GridSize.h"
+#include "GoLService.h"
+#include "GoLView.h"
+#include "../lib/Simulator.h"
 
 [[noreturn]] void GameController::run() {
-    std::cout << "Game of Life" << std::endl << std::endl;
-
     constexpr int STEP_DELAY_MS = 1000;
     constexpr int INIT_GRID_WIDTH = 10;
     constexpr int INIT_GRID_HEIGHT = 5;
 
-    GridSize initial(INIT_GRID_WIDTH, INIT_GRID_HEIGHT);
-    auto size = std::move(initial);
-
-    int gridWidth = size.width;
-    int gridHeight = size.height;
-
+    auto gridSize = std::make_shared<GridSize>(INIT_GRID_WIDTH, INIT_GRID_HEIGHT);
     auto startingLivingCellsCoordinates = this->getStartingLivingCellsCoordinates();
-    auto oldGrid = std::make_shared<Grid<Cell>>(gridWidth, gridHeight);
-    auto newGrid = std::make_shared<Grid<Cell>>(gridWidth, gridHeight);
+    auto goLService = std::make_unique<GoLService>(std::move(startingLivingCellsCoordinates));
+    auto goLView = std::make_unique<GoLView>();
+    Simulator<GoLService, GoLView, Cell> simulator(std::move(goLService), std::move(goLView), gridSize);
 
-    for (int i = 0; i < startingLivingCellsCoordinates->size(); i += 2) {
-        auto oldCell = oldGrid->getElement(startingLivingCellsCoordinates->at(i),
-                                           startingLivingCellsCoordinates->at(i + 1));
-        oldCell->setIsAlive(true);
-    }
-
-    std::cout << "Starting setup" << std::endl << std::endl;
-    oldGrid->display();
+    std::cout << "Initial game state" << std::endl << std::endl;
+    simulator.display();
     std::cout << std::endl;
 
     while (true) {
         std::time_t startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         std::cout << std::ctime(&startTime) << std::endl;
 
-        this->recalculateNewGridState(oldGrid, newGrid);
-        newGrid->display();
+        simulator.makeStep();
+        simulator.display();
         std::cout << std::endl;
-
-        oldGrid = std::move(newGrid);
-        newGrid = std::make_unique<Grid<Cell>>(gridWidth, gridHeight);
 
         std::chrono::milliseconds delay(STEP_DELAY_MS);
         std::this_thread::sleep_for(delay);

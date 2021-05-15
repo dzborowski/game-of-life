@@ -8,10 +8,9 @@
 
 #include "Neighborhood.h"
 
-template<typename T>
-class MooreNeighborhood : public Neighborhood<T> {
+class MooreNeighborhood : public Neighborhood {
 public:
-    explicit MooreNeighborhood(const std::vector<std::shared_ptr<T>> &neighbors) : Neighborhood<T>(neighbors) {}
+    explicit MooreNeighborhood(const std::vector<std::shared_ptr<Cell>> &neighbors);
 };
 
 

@@ -8,65 +8,46 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include "Cell.h"
+#include "../game_of_life/Cell.h"
+#include "GridSize.h"
 
 template<typename T>
 class Grid {
 
 public:
-    Grid(int width, int height);
+    explicit Grid(std::shared_ptr<GridSize> gridSize);
 
-    void display() const;
-
-    [[nodiscard]] constexpr int getWidth() const;
-
-    [[nodiscard]] constexpr int getHeight() const;
+    [[nodiscard]] std::shared_ptr<GridSize> getGridSize() const;
 
     std::shared_ptr<T> getElement(int x, int y) const;
 
 private:
-    int width = 0;
-    int height = 0;
-
+    std::shared_ptr<GridSize> gridSize;
     std::unique_ptr<std::vector<std::unique_ptr<std::vector<std::shared_ptr<T>>>>> elements;
 };
 
+
 template<typename T>
-Grid<T>::Grid(int width, int height) : width(width), height(height) {
+Grid<T>::Grid(std::shared_ptr<GridSize> gridSize) {
+    this->gridSize = gridSize;
     this->elements = std::make_unique<std::vector<std::unique_ptr<std::vector<std::shared_ptr<T>>>>>();
 
-    for (int i = 0; i < height; ++i) {
+    for (int i = 0; i < this->gridSize->height; ++i) {
         auto row = std::make_unique<std::vector<std::shared_ptr<T>>>();
-        for (int j = 0; j < width; ++j)
+        for (int j = 0; j < this->gridSize->width; ++j)
             row->push_back(std::make_shared<T>());
         this->elements->push_back(std::move(row));
     }
 }
 
 template<typename T>
-constexpr int Grid<T>::getWidth() const {
-    return width;
-}
-
-template<typename T>
-constexpr int Grid<T>::getHeight() const {
-    return height;
+std::shared_ptr<GridSize> Grid<T>::getGridSize() const {
+    return this->gridSize;
 }
 
 template<typename T>
 std::shared_ptr<T> Grid<T>::getElement(int x, int y) const {
     return this->elements->at(y)->at(x);
-}
-
-template<typename T>
-void Grid<T>::display() const {
-    for (const auto &row : *this->elements) {
-        for (const auto &element :*row) {
-            element->display();
-            std::cout << " ";
-        }
-        std::cout << std::endl;
-    }
 }
 
 
