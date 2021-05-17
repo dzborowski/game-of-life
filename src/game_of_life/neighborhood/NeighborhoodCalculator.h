@@ -15,10 +15,9 @@
 #include "MooreNeighborhood.h"
 #include "../../lib/Grid.h"
 
-template<typename T>
 class NeighborhoodCalculator {
 public:
-    explicit NeighborhoodCalculator(std::shared_ptr<Grid<T>> grid) : grid(grid) {}
+    explicit NeighborhoodCalculator(std::shared_ptr<Grid<Cell>> grid) : grid(grid) {}
 
     Neighborhood getNeighborhood(int x, int y) {
         auto gridSize = this->grid->getGridSize();
@@ -102,7 +101,7 @@ public:
     }
 
 private:
-    std::shared_ptr<Grid<T>> grid;
+    std::shared_ptr<Grid<Cell>> grid;
 };
 
 #endif //GAME_OF_LIFE_PW_DZ_NEIGHBORHOODCALCULATOR_H
