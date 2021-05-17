@@ -1,8 +1,8 @@
-#include "game_of_life/GameController.h"
+#include "game_of_life/GoLController.h"
 
 int main() {
     std::cout << "Game of Life" << std::endl << std::endl;
 
-    GameController gameController;
-    gameController.run();
+    GoLController goLController;
+    goLController.run();
 }

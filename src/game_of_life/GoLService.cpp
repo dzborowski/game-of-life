@@ -3,7 +3,7 @@
 //
 
 #include "GoLService.h"
-#include "neighborhood/NeighborhoodCalculator.h"
+#include "neighborhood/GoLNeighborhoodCalculator.h"
 
 GoLService::GoLService(std::unique_ptr<std::vector<int>> coordinates) : coordinates(std::move(coordinates)) {}
 
@@ -23,13 +23,13 @@ void GoLService::recalculateNewGridState(
         const std::shared_ptr<Grid<Cell>> &candidateGrid
 ) {
     auto gridSize = candidateGrid->getGridSize();
-    NeighborhoodCalculator neighborhoodCalculator(currentGrid);
+    GoLNeighborhoodCalculator goLNeighborhoodCalculator(currentGrid);
 
     for (int i = 0; i < gridSize->height; ++i) {
         for (int j = 0; j < gridSize->width; ++j) {
             auto oldCell = currentGrid->getElement(j, i);
             auto isOldCellAlive = oldCell->isAlive();
-            auto neighborhood = neighborhoodCalculator.getNeighborhood(j, i);
+            auto neighborhood = goLNeighborhoodCalculator.getNeighborhood(j, i);
             auto aliveOldCellNeighborsCount = neighborhood.getAliveCellsCount();
             auto newCell = candidateGrid->getElement(j, i);
 

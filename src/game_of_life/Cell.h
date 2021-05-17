@@ -16,7 +16,6 @@ public:
 
 private:
     mutable bool _isAlive = false;
-
 };
 
 

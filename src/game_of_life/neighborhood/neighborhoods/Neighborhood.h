@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include "../Cell.h"
+#include "../../Cell.h"
 
 class Neighborhood {
 public:

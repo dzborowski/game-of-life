@@ -8,12 +8,12 @@
 #include <chrono>
 #include <thread>
 #include <ctime>
-#include "GameController.h"
+#include "GoLController.h"
 #include "GoLService.h"
 #include "GoLView.h"
 #include "../lib/Simulator.h"
 
-[[noreturn]] void GameController::run() {
+[[noreturn]] void GoLController::run() {
     constexpr int STEP_DELAY_MS = 1000;
     constexpr int INIT_GRID_WIDTH = 10;
     constexpr int INIT_GRID_HEIGHT = 5;
@@ -42,7 +42,7 @@
 }
 
 
-std::unique_ptr<std::vector<int>> GameController::getStartingLivingCellsCoordinates() {
+std::unique_ptr<std::vector<int>> GoLController::getStartingLivingCellsCoordinates() {
     auto coordinates = std::make_unique<std::vector<int>>();
     coordinates->insert(coordinates->end(), {1, 0, 2, 1, 0, 2, 1, 2, 2, 2});
     return coordinates;

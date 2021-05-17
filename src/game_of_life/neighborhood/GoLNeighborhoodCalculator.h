@@ -2,22 +2,22 @@
 // Created by damian on 24.04.2021.
 //
 
-#ifndef GAME_OF_LIFE_PW_DZ_NEIGHBORHOODCALCULATOR_H
-#define GAME_OF_LIFE_PW_DZ_NEIGHBORHOODCALCULATOR_H
+#ifndef GAME_OF_LIFE_PW_DZ_GOLNEIGHBORHOODCALCULATOR_H
+#define GAME_OF_LIFE_PW_DZ_GOLNEIGHBORHOODCALCULATOR_H
 
 #include <iostream>
 #include <vector>
 #include <memory>
 #include "../Cell.h"
-#include "Neighborhood.h"
-#include "CornerNeighborhood.h"
-#include "EdgeNeighborhood.h"
-#include "MooreNeighborhood.h"
+#include "neighborhoods/Neighborhood.h"
+#include "neighborhoods/CornerNeighborhood.h"
+#include "neighborhoods/EdgeNeighborhood.h"
+#include "neighborhoods/MooreNeighborhood.h"
 #include "../../lib/Grid.h"
 
-class NeighborhoodCalculator {
+class GoLNeighborhoodCalculator {
 public:
-    explicit NeighborhoodCalculator(std::shared_ptr<Grid<Cell>> grid) : grid(grid) {}
+    explicit GoLNeighborhoodCalculator(std::shared_ptr<Grid<Cell>> grid) : grid(grid) {}
 
     Neighborhood getNeighborhood(int x, int y) {
         auto gridSize = this->grid->getGridSize();
@@ -104,4 +104,4 @@ private:
     std::shared_ptr<Grid<Cell>> grid;
 };
 
-#endif //GAME_OF_LIFE_PW_DZ_NEIGHBORHOODCALCULATOR_H
+#endif //GAME_OF_LIFE_PW_DZ_GOLNEIGHBORHOODCALCULATOR_H

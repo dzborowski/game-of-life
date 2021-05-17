@@ -2,15 +2,15 @@
 // Created by damian on 08.04.2021.
 //
 
-#ifndef GAME_OF_LIFE_PW_DZ_GAMECONTROLLER_H
-#define GAME_OF_LIFE_PW_DZ_GAMECONTROLLER_H
+#ifndef GAME_OF_LIFE_PW_DZ_GOLCONTROLLER_H
+#define GAME_OF_LIFE_PW_DZ_GOLCONTROLLER_H
 
 #include <vector>
 #include <memory>
 #include "../lib/Grid.h"
-#include "neighborhood/NeighborhoodCalculator.h"
+#include "neighborhood/GoLNeighborhoodCalculator.h"
 
-class GameController {
+class GoLController {
 public:
     [[noreturn]] void run();
 
@@ -19,4 +19,4 @@ private:
 };
 
 
-#endif //GAME_OF_LIFE_PW_DZ_GAMECONTROLLER_H
+#endif //GAME_OF_LIFE_PW_DZ_GOLCONTROLLER_H
