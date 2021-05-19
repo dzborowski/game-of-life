@@ -19,7 +19,11 @@
     constexpr int INIT_GRID_HEIGHT = 5;
 
     auto gridSize = std::make_shared<GridSize>(INIT_GRID_WIDTH, INIT_GRID_HEIGHT);
-    auto startingLivingCellsCoordinates = this->getStartingLivingCellsCoordinates();
+    auto startingLivingCellsCoordinates = [](){
+        auto coordinates = std::make_unique<std::vector<int>>();
+        coordinates->insert(coordinates->end(), {1, 0, 2, 1, 0, 2, 1, 2, 2, 2});
+        return coordinates;
+    }();
     auto goLService = std::make_unique<GoLService>(std::move(startingLivingCellsCoordinates));
     auto goLView = std::make_unique<GoLView>();
     Simulator<GoLService, GoLView, Cell> simulator(std::move(goLService), std::move(goLView), gridSize);
@@ -39,11 +43,4 @@
         std::chrono::milliseconds delay(STEP_DELAY_MS);
         std::this_thread::sleep_for(delay);
     }
-}
-
-
-std::unique_ptr<std::vector<int>> GoLController::getStartingLivingCellsCoordinates() {
-    auto coordinates = std::make_unique<std::vector<int>>();
-    coordinates->insert(coordinates->end(), {1, 0, 2, 1, 0, 2, 1, 2, 2, 2});
-    return coordinates;
 }

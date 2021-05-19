@@ -14,8 +14,6 @@ class GoLController {
 public:
     [[noreturn]] void run();
 
-private:
-    std::unique_ptr<std::vector<int>> getStartingLivingCellsCoordinates();
 };
 
 

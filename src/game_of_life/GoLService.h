@@ -20,6 +20,9 @@ public:
 
 protected:
     std::unique_ptr<std::vector<int>> coordinates;
+
+
+
 };
 
 
