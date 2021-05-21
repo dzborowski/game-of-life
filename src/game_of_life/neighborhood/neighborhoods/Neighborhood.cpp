@@ -13,7 +13,7 @@ int Neighborhood::getAliveCellsCount() {
     int count = 0;
     for (auto &cell : this->neighbors) {
         if (cell->isAlive())
-            count++;
+            count = [count]()mutable {count++;return count;}();
     }
     return count;
 }
