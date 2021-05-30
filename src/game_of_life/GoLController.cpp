@@ -9,21 +9,17 @@
 #include <thread>
 #include <ctime>
 #include "GoLController.h"
-#include "GoLService.h"
-#include "GoLView.h"
+#include "logic/GoLService.h"
+#include "view/GoLView.h"
 #include "../lib/Simulator.h"
+#include "data/GoLDataProvider.h"
+#include "GoLConfig.h"
 
 [[noreturn]] void GoLController::run() {
-    constexpr int STEP_DELAY_MS = 1000;
-    constexpr int INIT_GRID_WIDTH = 10;
-    constexpr int INIT_GRID_HEIGHT = 5;
+    GoLDataProvider goLDataProvider;
+    auto gridSize = goLDataProvider.getGridSize();
+    auto startingLivingCellsCoordinates = goLDataProvider.getStartingLivingCellsCoordinates(gridSize);
 
-    auto gridSize = std::make_shared<GridSize>(INIT_GRID_WIDTH, INIT_GRID_HEIGHT);
-    auto startingLivingCellsCoordinates = [](){
-        auto coordinates = std::make_unique<std::vector<int>>();
-        coordinates->insert(coordinates->end(), {1, 0, 2, 1, 0, 2, 1, 2, 2, 2});
-        return coordinates;
-    }();
     auto goLService = std::make_unique<GoLService>(std::move(startingLivingCellsCoordinates));
     auto goLView = std::make_unique<GoLView>();
     Simulator<GoLService, GoLView, Cell> simulator(std::move(goLService), std::move(goLView), gridSize);
@@ -40,7 +36,7 @@
         simulator.display();
         std::cout << std::endl;
 
-        std::chrono::milliseconds delay(STEP_DELAY_MS);
+        std::chrono::milliseconds delay(GoLConfig::STEP_DELAY_MS);
         std::this_thread::sleep_for(delay);
     }
 }

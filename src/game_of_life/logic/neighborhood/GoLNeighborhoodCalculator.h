@@ -13,7 +13,7 @@
 #include "neighborhoods/CornerNeighborhood.h"
 #include "neighborhoods/EdgeNeighborhood.h"
 #include "neighborhoods/MooreNeighborhood.h"
-#include "../../lib/Grid.h"
+#include "../../../lib/Grid.h"
 
 class GoLNeighborhoodCalculator {
 public:
@@ -29,6 +29,8 @@ public:
         bool isLeftBottomEdge = isLeftEdge && isBottomEdge;
         bool isRightTopEdge = isRightEdge && isTopEdge;
         bool isRightBottomEdge = isRightEdge && isBottomEdge;
+
+        // todo handle forgotten grid sizes 1x1, 1x3, 3x1 which causing memory access errors
 
         if (isLeftTopEdge) {
             return CornerNeighborhood({

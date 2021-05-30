@@ -7,9 +7,9 @@
 
 
 #include <memory>
-#include "Cell.h"
-#include "../lib/Grid.h"
-#include "../lib/GridSize.h"
+#include "../logic/Cell.h"
+#include "../../lib/Grid.h"
+#include "../../lib/GridSize.h"
 
 class GoLView {
 public:

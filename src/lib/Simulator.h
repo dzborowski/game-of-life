@@ -18,19 +18,34 @@ public:
             std::unique_ptr<V> view,
             std::shared_ptr<GridSize> gridSize
     ) : service(std::move(service)), view(std::move(view)), gridSize(gridSize) {
-        this->currentGrid = std::make_shared<Grid<T>>(gridSize);
-        this->candidateGrid = std::make_shared<Grid<T>>(gridSize);
-        this->service->initGridState(this->currentGrid);
+        try {
+            this->currentGrid = std::make_shared<Grid<T>>(gridSize);
+            this->candidateGrid = std::make_shared<Grid<T>>(gridSize);
+            this->service->initGridState(this->currentGrid);
+        } catch (...) {
+            std::cout << "Something was wrong with Simulator initialization" << std::endl;
+            throw std::exception();
+        }
     }
 
     void makeStep() {
-        this->service->recalculateNewGridState(this->currentGrid, this->candidateGrid);
-        this->currentGrid = std::move(this->candidateGrid);
-        this->candidateGrid = std::make_shared<Grid<T>>(this->gridSize);
+        try {
+            this->service->recalculateNewGridState(this->currentGrid, this->candidateGrid);
+            this->currentGrid = std::move(this->candidateGrid);
+            this->candidateGrid = std::make_shared<Grid<T>>(this->gridSize);
+        } catch (...) {
+            std::cout << "Something was wrong with while making step" << std::endl;
+            throw std::exception();
+        }
     }
 
     void display() {
-        this->view->display(this->currentGrid);
+        try {
+            this->view->display(this->currentGrid);
+        } catch (...) {
+            std::cout << "Something was wrong while displaying" << std::endl;
+            throw std::exception();
+        }
     }
 
 protected:

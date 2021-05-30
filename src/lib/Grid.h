@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include "../game_of_life/Cell.h"
+#include "../game_of_life/logic/Cell.h"
 #include "GridSize.h"
 
 template<typename T>

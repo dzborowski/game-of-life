@@ -8,12 +8,10 @@
 #include <vector>
 #include <memory>
 #include "../lib/Grid.h"
-#include "neighborhood/GoLNeighborhoodCalculator.h"
 
 class GoLController {
 public:
     [[noreturn]] void run();
-
 };
 
 

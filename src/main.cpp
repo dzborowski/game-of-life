@@ -1,8 +1,12 @@
 #include "game_of_life/GoLController.h"
 
 int main() {
-    std::cout << "Game of Life" << std::endl << std::endl;
+    try {
+        std::cout << "Game of Life" << std::endl << std::endl;
 
-    GoLController goLController;
-    goLController.run();
+        GoLController goLController;
+        goLController.run();
+    } catch (...) {
+        return 1;
+    }
 }

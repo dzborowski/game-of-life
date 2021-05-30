@@ -6,7 +6,7 @@
 #define GAME_OF_LIFE_PW_DZ_GOLSERVICE_H
 
 #include <memory>
-#include "../lib/Grid.h"
+#include "../../lib/Grid.h"
 
 class GoLService {
 public:
