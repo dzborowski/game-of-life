@@ -37,8 +37,12 @@ std::shared_ptr<GridSize> GoLDataProvider::getGridSize() noexcept {
         }
 
         return std::make_shared<GridSize>(gridWidth, gridHeight);
-    } catch (std::exception &e) {
-        std::cout << e.what() << std::endl;
+    } catch (GoLInvalidGridWidthException &e) {
+        std::cout << "Invalid grid width was provided." << std::endl;
+        std::cout << "Default grid size will be used." << std::endl << std::endl;
+        return GoLDataProvider::getDefaultGridSize();
+    } catch (GoLInvalidGridHeightException &e) {
+        std::cout << "Invalid grid height was provided." << std::endl;
         std::cout << "Default grid size will be used." << std::endl << std::endl;
         return GoLDataProvider::getDefaultGridSize();
     }
