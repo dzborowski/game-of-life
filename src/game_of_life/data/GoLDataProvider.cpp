@@ -11,6 +11,7 @@
 #include "GoLInvalidGridHeightException.h"
 #include "GoLInvalidCellCoordinateYException.h"
 #include "GoLInvalidCellCoordinateXException.h"
+#include "GoLRepeatedCoordinatesException.h"
 
 std::shared_ptr<GridSize> GoLDataProvider::getGridSize() noexcept {
     if (GoLConfig::IS_DEBUG) {
@@ -57,6 +58,9 @@ GoLDataProvider::getStartingLivingCellsCoordinates(std::shared_ptr<GridSize> gri
     int coordinatesCountLimit = gridSize->width * gridSize->height;
     auto coordinates = std::make_unique<std::vector<int>>();
     bool userWantsToAddMoreCoordinates = true;
+    int tempCoordinateX;
+    int tempCoordinateY;
+
 
     while (userWantsToAddMoreCoordinates) {
         if (coordinatesCountLimit == coordinates->size() / 2) {
@@ -82,22 +86,33 @@ GoLDataProvider::getStartingLivingCellsCoordinates(std::shared_ptr<GridSize> gri
             if (coordinateY < 0 || coordinateY >= gridSize->height) {
                 throw GoLInvalidCellCoordinateYException();
             }
+            if(std::equal_to<int>()(coordinateX,tempCoordinateX) && std::equal_to<int>()(coordinateY,tempCoordinateY)){
+                throw GoLRepeatedCoordinatesException();
+
+            }
 
             coordinates->push_back(coordinateX);
             coordinates->push_back(coordinateY);
+
+            tempCoordinateX = coordinateX;
+            tempCoordinateY = coordinateY;
 
             std::string response;
             std::cout << "Do you want add more coordinates[Yes/Other char]: ";
             std::cin >> response;
             std::cout << std::endl;
 
-            if (response != "Yes") {
+
+            if (std::not_equal_to<std::string>()(response,"Yes")) {
                 userWantsToAddMoreCoordinates = false;
             }
         } catch (std::exception &e) {
             std::cout << e.what() << std::endl;
         }
+
     }
+
+
 
     return std::move(coordinates);
 }
