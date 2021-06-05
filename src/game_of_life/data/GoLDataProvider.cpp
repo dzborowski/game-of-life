@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <exception>
+#include <regex>
 #include "GoLDataProvider.h"
 #include "../GoLConfig.h"
 #include "GoLInvalidGridWidthException.h"
@@ -63,6 +64,7 @@ GoLDataProvider::getStartingLivingCellsCoordinates(std::shared_ptr<GridSize> gri
 
 
     while (userWantsToAddMoreCoordinates) {
+        bool regexTest = true;
         if (coordinatesCountLimit == coordinates->size() / 2) {
             std::cout << "Cannot add more coordinates." << std::endl;
             break;
@@ -97,9 +99,21 @@ GoLDataProvider::getStartingLivingCellsCoordinates(std::shared_ptr<GridSize> gri
             tempCoordinateX = coordinateX;
             tempCoordinateY = coordinateY;
 
+            std::regex pattern1("Yes");
+            std::regex pattern2("No");
+
+
             std::string response;
-            std::cout << "Do you want add more coordinates[Yes/Other char]: ";
-            std::cin >> response;
+            std::cout << "Do you want add more coordinates[Yes/No]: "<<std::endl;
+
+            while(regexTest){
+                std::cin >> response;
+                if(std::regex_match(response,pattern1) || std::regex_match(response,pattern2))
+                    regexTest=false;
+                else
+                    std::cout<<"Wrong answer, it must be Yes or No "<<std::endl;
+            }
+
             std::cout << std::endl;
 
 
