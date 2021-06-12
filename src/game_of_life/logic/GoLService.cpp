@@ -2,6 +2,7 @@
 // Created by damian on 11.05.2021.
 //
 
+#include <thread>
 #include "GoLService.h"
 #include "neighborhood/GoLNeighborhoodCalculator.h"
 
@@ -25,28 +26,30 @@ void GoLService::recalculateNewGridState(
 ) {
     auto gridSize = candidateGrid->getGridSize();
     GoLNeighborhoodCalculator goLNeighborhoodCalculator(currentGrid);
-
-    bool state = false;
-    auto setState = [&state](){
-        return state = true;
-    };
+    std::vector<std::thread> workers;
 
     for (int i = 0; i < gridSize->height; ++i) {
-        for (int j = 0; j < gridSize->width; ++j) {
-            auto oldCell = currentGrid->getElement(j, i);
-            auto isOldCellAlive = oldCell->isAlive();
-            auto neighborhood = goLNeighborhoodCalculator.getNeighborhood(j, i);
-            auto aliveOldCellNeighborsCount = neighborhood.getAliveCellsCount();
-            auto newCell = candidateGrid->getElement(j, i);
+        workers.emplace_back([i, &goLNeighborhoodCalculator, &gridSize, &currentGrid, &candidateGrid]() {
+            for (int j = 0; j < gridSize->width; ++j) {
+                auto oldCell = currentGrid->getElement(j, i);
+                auto isOldCellAlive = oldCell->isAlive();
+                auto neighborhood = goLNeighborhoodCalculator.getNeighborhood(j, i);
+                auto aliveOldCellNeighborsCount = neighborhood.getAliveCellsCount();
+                auto newCell = candidateGrid->getElement(j, i);
 
-            if (!isOldCellAlive && aliveOldCellNeighborsCount == 3)
-                newCell->setIsAlive(setState());
+                if (!isOldCellAlive && aliveOldCellNeighborsCount == 3)
+                    newCell->setIsAlive(true);
 
-            if (isOldCellAlive && (aliveOldCellNeighborsCount == 2 || aliveOldCellNeighborsCount == 3))
-                newCell->setIsAlive(setState());
+                if (isOldCellAlive && (aliveOldCellNeighborsCount == 2 || aliveOldCellNeighborsCount == 3))
+                    newCell->setIsAlive(true);
 
-            if (isOldCellAlive && (aliveOldCellNeighborsCount < 2 || aliveOldCellNeighborsCount > 3))
-                newCell->setIsAlive(false);
-        }
+                if (isOldCellAlive && (aliveOldCellNeighborsCount < 2 || aliveOldCellNeighborsCount > 3))
+                    newCell->setIsAlive(false);
+            }
+        });
+    }
+
+    for (auto &worker: workers) {
+        worker.join();
     }
 }

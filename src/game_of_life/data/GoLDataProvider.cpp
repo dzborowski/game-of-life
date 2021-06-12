@@ -6,6 +6,8 @@
 #include <string>
 #include <exception>
 #include <regex>
+#include <thread>
+#include <mutex>
 #include "GoLDataProvider.h"
 #include "../GoLConfig.h"
 #include "GoLInvalidGridWidthException.h"
@@ -14,31 +16,63 @@
 #include "GoLInvalidCellCoordinateXException.h"
 #include "GoLRepeatedCoordinatesException.h"
 
+static std::exception_ptr thread_exception_ptr = nullptr;
+
 std::shared_ptr<GridSize> GoLDataProvider::getGridSize() noexcept {
     if (GoLConfig::IS_DEBUG) {
         return GoLDataProvider::getDefaultGridSize();
     }
 
+    auto gridSize = std::make_shared<GridSize>(0, 0);
+    std::mutex mtx;
+
     try {
-        int gridWidth;
-        std::cout << "Provide grid width, which must be positive integer: ";
-        std::cin >> gridWidth;
-        std::cout << std::endl;
+        std::thread gridWidthThread([&gridSize, &mtx]() {
+            try {
+                int gridWidth;
+                std::cout << "Provide grid width, which must be positive integer:" << std::endl;
+                std::cin >> gridWidth;
+                std::cout << std::endl;
 
-        if (gridWidth <= 0) {
-            throw GoLInvalidGridWidthException();
+                if (gridWidth <= 0) {
+                    throw GoLInvalidGridWidthException();
+                }
+
+                mtx.lock();
+                gridSize->width = gridWidth;
+                mtx.unlock();
+            } catch (...) {
+                thread_exception_ptr = std::current_exception();
+            }
+        });
+
+        std::thread gridHeightThread([&gridSize, &mtx]() {
+            try {
+                int gridHeight;
+                std::cout << "Provide grid height, which must be positive integer:" << std::endl;
+                std::cin >> gridHeight;
+                std::cout << std::endl;
+
+                if (gridHeight <= 0) {
+                    throw GoLInvalidGridHeightException();
+                }
+
+                mtx.lock();
+                gridSize->height = gridHeight;
+                mtx.unlock();
+            } catch (...) {
+                thread_exception_ptr = std::current_exception();
+            }
+        });
+
+        gridWidthThread.join();
+        gridHeightThread.join();
+
+        if (thread_exception_ptr) {
+            std::rethrow_exception(thread_exception_ptr);
         }
 
-        int gridHeight;
-        std::cout << "Provide grid height, which must be positive integer: ";
-        std::cin >> gridHeight;
-        std::cout << std::endl;
-
-        if (gridHeight <= 0) {
-            throw GoLInvalidGridHeightException();
-        }
-
-        return std::make_shared<GridSize>(gridWidth, gridHeight);
+        return gridSize;
     } catch (GoLInvalidGridWidthException &e) {
         std::cout << "Invalid grid width was provided." << std::endl;
         std::cout << "Default grid size will be used." << std::endl << std::endl;
@@ -88,7 +122,8 @@ GoLDataProvider::getStartingLivingCellsCoordinates(std::shared_ptr<GridSize> gri
             if (coordinateY < 0 || coordinateY >= gridSize->height) {
                 throw GoLInvalidCellCoordinateYException();
             }
-            if(std::equal_to<int>()(coordinateX,tempCoordinateX) && std::equal_to<int>()(coordinateY,tempCoordinateY)){
+            if (std::equal_to<int>()(coordinateX, tempCoordinateX) &&
+                std::equal_to<int>()(coordinateY, tempCoordinateY)) {
                 throw GoLRepeatedCoordinatesException();
 
             }
@@ -104,20 +139,20 @@ GoLDataProvider::getStartingLivingCellsCoordinates(std::shared_ptr<GridSize> gri
 
 
             std::string response;
-            std::cout << "Do you want add more coordinates[Yes/No]: "<<std::endl;
+            std::cout << "Do you want add more coordinates[Yes/No]: " << std::endl;
 
-            while(regexTest){
+            while (regexTest) {
                 std::cin >> response;
-                if(std::regex_match(response,pattern1) || std::regex_match(response,pattern2))
-                    regexTest=false;
+                if (std::regex_match(response, pattern1) || std::regex_match(response, pattern2))
+                    regexTest = false;
                 else
-                    std::cout<<"Wrong answer, it must be Yes or No "<<std::endl;
+                    std::cout << "Wrong answer, it must be Yes or No " << std::endl;
             }
 
             std::cout << std::endl;
 
 
-            if (std::not_equal_to<std::string>()(response,"Yes")) {
+            if (std::not_equal_to<std::string>()(response, "Yes")) {
                 userWantsToAddMoreCoordinates = false;
             }
         } catch (std::exception &e) {
@@ -125,7 +160,6 @@ GoLDataProvider::getStartingLivingCellsCoordinates(std::shared_ptr<GridSize> gri
         }
 
     }
-
 
 
     return std::move(coordinates);
