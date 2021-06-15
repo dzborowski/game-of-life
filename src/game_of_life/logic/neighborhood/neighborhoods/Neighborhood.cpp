@@ -23,7 +23,9 @@ int Neighborhood::getAliveCellsCount() {
     }
 
     for (auto &worker: workers) {
-        worker.join();
+        if (worker.joinable()) {
+            worker.join();
+        }
     }
 
     return count;

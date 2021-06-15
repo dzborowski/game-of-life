@@ -50,6 +50,8 @@ void GoLService::recalculateNewGridState(
     }
 
     for (auto &worker: workers) {
-        worker.join();
+        if (worker.joinable()) {
+            worker.join();
+        }
     }
 }

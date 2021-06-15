@@ -65,8 +65,13 @@ std::shared_ptr<GridSize> GoLDataProvider::getGridSize() noexcept {
             }
         });
 
-        gridWidthThread.join();
-        gridHeightThread.join();
+        if (gridWidthThread.joinable()) {
+            gridWidthThread.join();
+        }
+
+        if (gridHeightThread.joinable()) {
+            gridHeightThread.join();
+        }
 
         if (thread_exception_ptr) {
             std::rethrow_exception(thread_exception_ptr);
